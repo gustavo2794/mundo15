@@ -1,0 +1,539 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered user profile, preferences, and business registration info.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Authentication user ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Full display name of the user.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address.",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "phone": {
+          "type": "string",
+          "description": "Optional phone number.",
+          "maxLength": 30
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Optional avatar URL.",
+          "maxLength": 1000
+        },
+        "userType": {
+          "type": "string",
+          "enum": ["quinceanera", "business"],
+          "description": "Account type: quinceanera or business/academy."
+        },
+        "businessName": {
+          "type": "string",
+          "description": "Name of the business or academy.",
+          "maxLength": 120
+        },
+        "businessCategory": {
+          "type": "string",
+          "description": "Commercial sector or dance styles / giro comercial.",
+          "maxLength": 200
+        },
+        "businessDescription": {
+          "type": "string",
+          "description": "Public business description.",
+          "maxLength": 4000
+        },
+        "businessCost": {
+          "type": "string",
+          "enum": ["$", "$$", "$$$"],
+          "description": "Price tier of the business."
+        },
+        "businessLocation": {
+          "type": "string",
+          "description": "City or location of business.",
+          "maxLength": 200
+        },
+        "businessWebsite": {
+          "type": "string",
+          "description": "Website or social link of business.",
+          "maxLength": 300
+        },
+        "businessPhone": {
+          "type": "string",
+          "description": "Public phone for business.",
+          "maxLength": 30
+        },
+        "eventDate": {
+          "type": "string",
+          "description": "Date of the Quinceanera celebration.",
+          "maxLength": 50
+        },
+        "eventLocation": {
+          "type": "string",
+          "description": "City or venue location.",
+          "maxLength": 200
+        },
+        "colorPalette": {
+          "type": "array",
+          "description": "List of celebration theme colors."
+        },
+        "totalBudget": {
+          "type": "number",
+          "description": "Total estimated budget."
+        },
+        "musicPreferences": {
+          "type": "array",
+          "description": "Selected music genres (max 20)."
+        },
+        "dancePreferences": {
+          "type": "array",
+          "description": "Selected dance styles (max 20)."
+        },
+        "themePreferences": {
+          "type": "array",
+          "description": "Selected event themes (max 20)."
+        },
+        "checklist": {
+          "type": "array",
+          "description": "Party planning checklist tasks."
+        },
+        "godparents": {
+          "type": "array",
+          "description": "List of sponsors/godparents."
+        },
+        "tables": {
+          "type": "array",
+          "description": "Table arrangements and guest seating."
+        },
+        "budgetItems": {
+          "type": "array",
+          "description": "Detailed budget items and expenses."
+        },
+        "courtOfHonor": {
+          "type": "array",
+          "description": "Chambelanes and damas members."
+        },
+        "timeline": {
+          "type": "array",
+          "description": "Minute-by-minute day of event schedule."
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Optional latitude coordinate."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Optional longitude coordinate."
+        },
+        "mediaGallery": {
+          "type": "array",
+          "description": "Uploaded inspiration photos and videos (max 30)."
+        },
+        "playlist": {
+          "type": "array",
+          "description": "Music playlist for special moments."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of profile creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last profile update."
+        }
+      },
+      "required": ["uid", "displayName", "email", "userType", "musicPreferences", "dancePreferences", "themePreferences", "createdAt", "updatedAt"]
+    },
+    "AdminRole": {
+      "title": "AdminRole",
+      "description": "Database-verified administrator role assignment.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "UID of the administrator.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email of the administrator.",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "grantedBy": {
+          "type": "string",
+          "description": "UID of the admin who granted this role.",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when admin role was granted."
+        }
+      },
+      "required": ["uid", "email", "grantedBy", "createdAt"]
+    },
+    "Academy": {
+      "title": "Academy",
+      "description": "Quinceanera dance academy listing managed by administrators or registered businesses.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Slug/document ID of the academy.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Academy display name.",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "description": "Short summary for cards.",
+          "minLength": 10,
+          "maxLength": 400
+        },
+        "longDescription": {
+          "type": "string",
+          "description": "Detailed academy description.",
+          "minLength": 20,
+          "maxLength": 4000
+        },
+        "cost": {
+          "type": "string",
+          "enum": ["$", "$$", "$$$"],
+          "description": "Price tier."
+        },
+        "location": {
+          "type": "string",
+          "description": "City or street address.",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "locationLink": {
+          "type": "string",
+          "description": "Optional Google Maps URL.",
+          "maxLength": 500
+        },
+        "latitude": {
+          "type": "number",
+          "description": "Optional latitude coordinate."
+        },
+        "longitude": {
+          "type": "number",
+          "description": "Optional longitude coordinate."
+        },
+        "popularity": {
+          "type": "string",
+          "enum": ["Alta", "Media", "Nueva"],
+          "description": "Popularity tier."
+        },
+        "danceStyles": {
+          "type": "array",
+          "description": "List of dance styles or commercial categories offered (1 to 20 items)."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number.",
+          "minLength": 7,
+          "maxLength": 30
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email address.",
+          "minLength": 5,
+          "maxLength": 200
+        },
+        "website": {
+          "type": "string",
+          "description": "Website or social media link.",
+          "minLength": 4,
+          "maxLength": 300
+        },
+        "logoImageId": {
+          "type": "string",
+          "description": "Placeholder image ID for academy cover/logo.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "coverImageUrl": {
+          "type": "string",
+          "description": "Custom uploaded cover image URL from Firebase Storage.",
+          "maxLength": 1000
+        },
+        "galleryImageIds": {
+          "type": "array",
+          "description": "Placeholder image IDs for gallery (max 20)."
+        },
+        "galleryMedia": {
+          "type": "array",
+          "description": "Uploaded photos and videos from Firebase Storage (max 30)."
+        },
+        "isPublished": {
+          "type": "boolean",
+          "description": "Whether the academy is visible to regular users."
+        },
+        "displayOrder": {
+          "type": "number",
+          "description": "Numeric display order."
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "UID of creator.",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "longDescription",
+        "cost",
+        "location",
+        "popularity",
+        "danceStyles",
+        "phone",
+        "email",
+        "website",
+        "logoImageId",
+        "galleryImageIds",
+        "isPublished",
+        "displayOrder",
+        "createdBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "QuoteRequest": {
+      "title": "QuoteRequest",
+      "description": "Quote inquiry submitted by a user for a dance academy.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Quote request document ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "academyId": {
+          "type": "string",
+          "description": "Referenced academy ID.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "academyName": {
+          "type": "string",
+          "description": "Display name of the academy.",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the requesting user.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userName": {
+          "type": "string",
+          "description": "Name of the requesting user.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "userEmail": {
+          "type": "string",
+          "format": "email",
+          "description": "Email of the requesting user.",
+          "minLength": 3,
+          "maxLength": 200
+        },
+        "eventDate": {
+          "type": "string",
+          "description": "Optional target Quinceanera date.",
+          "maxLength": 50
+        },
+        "message": {
+          "type": "string",
+          "description": "Inquiry message from the user.",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "contacted", "archived"],
+          "description": "Current handling status."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update."
+        }
+      },
+      "required": [
+        "id",
+        "academyId",
+        "academyName",
+        "userId",
+        "userName",
+        "userEmail",
+        "message",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AcademyReview": {
+      "title": "AcademyReview",
+      "description": "Reviews and ratings left by quinceañeras and families for dance academies.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Document ID of review.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "academyId": {
+          "type": "string",
+          "description": "ID of reviewed academy.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "UID of the reviewer.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userName": {
+          "type": "string",
+          "description": "Name of the reviewer.",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "userRole": {
+          "type": "string",
+          "description": "Role of reviewer e.g. Quinceañera, Mamá, Hermana, etc.",
+          "maxLength": 80
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating score between 1 and 5 stars."
+        },
+        "title": {
+          "type": "string",
+          "description": "Short headline of review.",
+          "minLength": 3,
+          "maxLength": 120
+        },
+        "comment": {
+          "type": "string",
+          "description": "Full review text.",
+          "minLength": 5,
+          "maxLength": 2000
+        },
+        "serviceHired": {
+          "type": "string",
+          "description": "Service hired, e.g. Vals Principal, Baile Sorpresa, Entrada.",
+          "maxLength": 120
+        },
+        "eventDate": {
+          "type": "string",
+          "description": "Month/Year or approximate date of the event.",
+          "maxLength": 60
+        },
+        "verifiedBooking": {
+          "type": "boolean",
+          "description": "Whether this review is from a verified celebration."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of update."
+        }
+      },
+      "required": ["id", "academyId", "userId", "userName", "rating", "title", "comment", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Private user profiles and preferences, readable only by owner or verified admin."
+    },
+    "/admins/{userId}": {
+      "schema": {
+        "$ref": "#/entities/AdminRole"
+      },
+      "description": "Verified administrator role assignments."
+    },
+    "/academies/{academyId}": {
+      "schema": {
+        "$ref": "#/entities/Academy"
+      },
+      "description": "Dance academy directory managed by administrators or businesses."
+    },
+    "/quoteRequests/{requestId}": {
+      "schema": {
+        "$ref": "#/entities/QuoteRequest"
+      },
+      "description": "Quote requests submitted by users for specific academies."
+    },
+    "/academyReviews/{reviewId}": {
+      "schema": {
+        "$ref": "#/entities/AcademyReview"
+      },
+      "description": "Reviews and ratings for dance academies."
+    }
+  }
+}

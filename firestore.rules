@@ -1,0 +1,337 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isVerifiedOwner(userId) {
+      return isVerifiedUser() && request.auth.uid == userId;
+    }
+
+    function isBootstrappedAdmin() {
+      return isVerifiedUser() && request.auth.token.email == 'gusanito2794@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || (
+        isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidStringList(listVal, minItems, maxItems) {
+      return listVal is list &&
+        listVal.size() >= minItems &&
+        listVal.size() <= maxItems &&
+        (listVal.size() == 0 || (listVal[0] is string && listVal[0].size() >= 1 && listVal[0].size() <= 100));
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'displayName', 'email', 'userType', 'musicPreferences', 'dancePreferences', 'themePreferences', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'phone', 'photoURL', 'userType',
+          'businessName', 'businessCategory', 'businessDescription', 'businessCost',
+          'businessLocation', 'businessWebsite', 'businessPhone',
+          'latitude', 'longitude',
+          'eventDate', 'eventLocation', 'colorPalette', 'totalBudget',
+          'musicPreferences', 'dancePreferences', 'themePreferences', 'mediaGallery',
+          'checklist', 'godparents', 'tables', 'budgetItems', 'courtOfHonor', 'timeline', 'playlist',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.uid is string && data.uid == userId && isValidId(data.uid) &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 100 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 200 &&
+        (!('phone' in data) || (data.phone is string && data.phone.size() <= 30)) &&
+        (!('photoURL' in data) || (data.photoURL is string && data.photoURL.size() <= 1000)) &&
+        data.userType in ['quinceanera', 'business'] &&
+        (!('businessName' in data) || (data.businessName is string && data.businessName.size() <= 120)) &&
+        (!('businessCategory' in data) || (data.businessCategory is string && data.businessCategory.size() <= 200)) &&
+        (!('businessDescription' in data) || (data.businessDescription is string && data.businessDescription.size() <= 4000)) &&
+        (!('businessCost' in data) || data.businessCost in ['$', '$$', '$$$']) &&
+        (!('businessLocation' in data) || (data.businessLocation is string && data.businessLocation.size() <= 200)) &&
+        (!('businessWebsite' in data) || (data.businessWebsite is string && data.businessWebsite.size() <= 300)) &&
+        (!('businessPhone' in data) || (data.businessPhone is string && data.businessPhone.size() <= 30)) &&
+        (!('latitude' in data) || (data.latitude is number && data.latitude >= -90 && data.latitude <= 90)) &&
+        (!('longitude' in data) || (data.longitude is number && data.longitude >= -180 && data.longitude <= 180)) &&
+        (!('eventDate' in data) || (data.eventDate is string && data.eventDate.size() <= 50)) &&
+        (!('eventLocation' in data) || (data.eventLocation is string && data.eventLocation.size() <= 200)) &&
+        (!('colorPalette' in data) || (data.colorPalette is list && data.colorPalette.size() <= 10)) &&
+        (!('totalBudget' in data) || (data.totalBudget is number && data.totalBudget >= 0)) &&
+        isValidStringList(data.musicPreferences, 0, 20) &&
+        isValidStringList(data.dancePreferences, 0, 20) &&
+        isValidStringList(data.themePreferences, 0, 20) &&
+        (!('mediaGallery' in data) || (data.mediaGallery is list && data.mediaGallery.size() <= 30)) &&
+        (!('checklist' in data) || (data.checklist is list && data.checklist.size() <= 100)) &&
+        (!('godparents' in data) || (data.godparents is list && data.godparents.size() <= 100)) &&
+        (!('tables' in data) || (data.tables is list && data.tables.size() <= 100)) &&
+        (!('budgetItems' in data) || (data.budgetItems is list && data.budgetItems.size() <= 100)) &&
+        (!('courtOfHonor' in data) || (data.courtOfHonor is list && data.courtOfHonor.size() <= 50)) &&
+        (!('timeline' in data) || (data.timeline is list && data.timeline.size() <= 50)) &&
+        (!('playlist' in data) || (data.playlist is list && data.playlist.size() <= 50)) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidAdminRole(data, userId) {
+      return data.keys().hasAll(['uid', 'email', 'grantedBy', 'createdAt']) &&
+        data.keys().hasOnly(['uid', 'email', 'grantedBy', 'createdAt']) &&
+        data.uid is string && data.uid == userId && isValidId(data.uid) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 200 &&
+        data.grantedBy is string && data.grantedBy.size() >= 1 && data.grantedBy.size() <= 128 &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidAcademy(data, academyId) {
+      return data.keys().hasAll([
+          'id', 'name', 'description', 'longDescription', 'cost', 'location',
+          'popularity', 'danceStyles', 'phone', 'email', 'website',
+          'logoImageId', 'galleryImageIds', 'isPublished', 'displayOrder',
+          'createdBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'name', 'description', 'longDescription', 'cost', 'location',
+          'locationLink', 'latitude', 'longitude', 'popularity', 'danceStyles', 'phone', 'email', 'website',
+          'logoImageId', 'coverImageUrl', 'galleryImageIds', 'galleryMedia', 'isPublished', 'displayOrder',
+          'createdBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id is string && data.id == academyId && isValidId(data.id) &&
+        data.name is string && data.name.size() >= 3 && data.name.size() <= 120 &&
+        data.description is string && data.description.size() >= 10 && data.description.size() <= 400 &&
+        data.longDescription is string && data.longDescription.size() >= 20 && data.longDescription.size() <= 4000 &&
+        data.cost in ['$', '$$', '$$$'] &&
+        data.location is string && data.location.size() >= 3 && data.location.size() <= 200 &&
+        (!('locationLink' in data) || (data.locationLink is string && data.locationLink.size() <= 500)) &&
+        (!('latitude' in data) || (data.latitude is number && data.latitude >= -90 && data.latitude <= 90)) &&
+        (!('longitude' in data) || (data.longitude is number && data.longitude >= -180 && data.longitude <= 180)) &&
+        data.popularity in ['Alta', 'Media', 'Nueva'] &&
+        isValidStringList(data.danceStyles, 1, 20) &&
+        data.phone is string && data.phone.size() >= 7 && data.phone.size() <= 30 &&
+        data.email is string && data.email.size() >= 5 && data.email.size() <= 200 &&
+        data.website is string && data.website.size() >= 4 && data.website.size() <= 300 &&
+        data.logoImageId is string && data.logoImageId.size() >= 1 && data.logoImageId.size() <= 100 &&
+        (!('coverImageUrl' in data) || (data.coverImageUrl is string && data.coverImageUrl.size() <= 1000)) &&
+        isValidStringList(data.galleryImageIds, 0, 20) &&
+        (!('galleryMedia' in data) || (data.galleryMedia is list && data.galleryMedia.size() <= 30)) &&
+        data.isPublished is bool &&
+        data.displayOrder is number && data.displayOrder >= 0 &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidQuoteRequest(data, requestId) {
+      return data.keys().hasAll([
+          'id', 'academyId', 'academyName', 'userId', 'userName',
+          'userEmail', 'message', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'academyId', 'academyName', 'userId', 'userName',
+          'userEmail', 'eventDate', 'message', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id is string && data.id == requestId && isValidId(data.id) &&
+        data.academyId is string && isValidId(data.academyId) &&
+        data.academyName is string && data.academyName.size() >= 1 && data.academyName.size() <= 120 &&
+        data.userId is string && isValidId(data.userId) &&
+        data.userName is string && data.userName.size() >= 1 && data.userName.size() <= 100 &&
+        data.userEmail is string && data.userEmail.size() >= 3 && data.userEmail.size() <= 200 &&
+        (!('eventDate' in data) || (data.eventDate is string && data.eventDate.size() <= 50)) &&
+        data.message is string && data.message.size() >= 5 && data.message.size() <= 1000 &&
+        data.status in ['pending', 'contacted', 'archived'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidAcademyReview(data, reviewId) {
+      return data.keys().hasAll([
+          'id', 'academyId', 'userId', 'userName', 'rating', 'title', 'comment', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'academyId', 'userId', 'userName', 'userRole', 'rating',
+          'title', 'comment', 'serviceHired', 'eventDate', 'verifiedBooking',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.id is string && data.id == reviewId && isValidId(data.id) &&
+        data.academyId is string && isValidId(data.academyId) &&
+        data.userId is string && isValidId(data.userId) &&
+        data.userName is string && data.userName.size() >= 1 && data.userName.size() <= 100 &&
+        (!('userRole' in data) || (data.userRole is string && data.userRole.size() <= 80)) &&
+        data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+        data.title is string && data.title.size() >= 3 && data.title.size() <= 120 &&
+        data.comment is string && data.comment.size() >= 5 && data.comment.size() <= 2000 &&
+        (!('serviceHired' in data) || (data.serviceHired is string && data.serviceHired.size() <= 120)) &&
+        (!('eventDate' in data) || (data.eventDate is string && data.eventDate.size() <= 60)) &&
+        (!('verifiedBooking' in data) || data.verifiedBooking is bool) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin() && resource.data.uid is string;
+
+      allow create: if isValidId(userId) &&
+        isVerifiedOwner(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isValidId(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          isAdmin() ||
+          (
+            isVerifiedOwner(userId) &&
+            incoming().diff(existing()).affectedKeys().hasOnly([
+              'displayName', 'phone', 'photoURL', 'userType',
+              'businessName', 'businessCategory', 'businessDescription', 'businessCost',
+              'businessLocation', 'businessWebsite', 'businessPhone',
+              'latitude', 'longitude',
+              'eventDate', 'eventLocation', 'colorPalette', 'totalBudget',
+              'musicPreferences', 'dancePreferences', 'themePreferences', 'mediaGallery',
+              'checklist', 'godparents', 'tables', 'budgetItems', 'courtOfHonor', 'timeline', 'playlist',
+              'updatedAt'
+            ])
+          )
+        );
+
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    match /admins/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin() && resource.data.uid is string;
+
+      allow create: if isValidId(userId) &&
+        isAdmin() &&
+        isValidAdminRole(incoming(), userId) &&
+        incoming().grantedBy == request.auth.uid &&
+        incoming().createdAt == request.time;
+
+      allow update: if false;
+
+      allow delete: if isValidId(userId) && isAdmin() && request.auth.uid != userId;
+    }
+
+    match /academies/{academyId} {
+      allow get: if isValidId(academyId) && (isAdmin() || (isSignedIn() && resource.data.isPublished == true));
+      allow list: if isAdmin() || (isSignedIn() && resource.data.isPublished == true);
+
+      allow create: if isValidId(academyId) &&
+        (isAdmin() || (isVerifiedUser() && incoming().createdBy == request.auth.uid)) &&
+        isValidAcademy(incoming(), academyId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isValidId(academyId) &&
+        (isAdmin() || (isVerifiedUser() && resource.data.createdBy == request.auth.uid)) &&
+        isValidAcademy(incoming(), academyId) &&
+        incoming().id == existing().id &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'name', 'description', 'longDescription', 'cost', 'location',
+          'locationLink', 'latitude', 'longitude', 'popularity', 'danceStyles', 'phone', 'email', 'website',
+          'logoImageId', 'coverImageUrl', 'galleryImageIds', 'galleryMedia', 'isPublished', 'displayOrder', 'updatedAt'
+        ]);
+
+      allow delete: if isValidId(academyId) && (isAdmin() || (isSignedIn() && resource.data.createdBy == request.auth.uid));
+    }
+
+    match /quoteRequests/{requestId} {
+      allow get: if isValidId(requestId) && (
+        isAdmin() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid) ||
+        (isVerifiedUser() && resource.data.academyId is string && exists(/databases/$(database)/documents/academies/$(resource.data.academyId)) && get(/databases/$(database)/documents/academies/$(resource.data.academyId)).data.createdBy == request.auth.uid)
+      );
+
+      allow list: if (isAdmin() && resource.data.userId is string) ||
+        (isSignedIn() && resource.data.userId == request.auth.uid) ||
+        (isVerifiedUser() && resource.data.academyId is string && exists(/databases/$(database)/documents/academies/$(resource.data.academyId)) && get(/databases/$(database)/documents/academies/$(resource.data.academyId)).data.createdBy == request.auth.uid);
+
+      allow create: if isValidId(requestId) &&
+        isVerifiedUser() &&
+        isValidQuoteRequest(incoming(), requestId) &&
+        incoming().userId == request.auth.uid &&
+        incoming().status == 'pending' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        exists(/databases/$(database)/documents/academies/$(incoming().academyId));
+
+      allow update: if isValidId(requestId) &&
+        isValidQuoteRequest(incoming(), requestId) &&
+        incoming().id == existing().id &&
+        incoming().academyId == existing().academyId &&
+        incoming().userId == existing().userId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) && (
+          isAdmin() ||
+          (
+            isVerifiedUser() &&
+            exists(/databases/$(database)/documents/academies/$(existing().academyId)) &&
+            get(/databases/$(database)/documents/academies/$(existing().academyId)).data.createdBy == request.auth.uid
+          )
+        );
+
+      allow delete: if isValidId(requestId) && (
+        isAdmin() ||
+        (isVerifiedUser() && resource.data.userId == request.auth.uid)
+      );
+    }
+
+    match /academyReviews/{reviewId} {
+      allow get, list: if isSignedIn();
+
+      allow create: if isValidId(reviewId) &&
+        isSignedIn() &&
+        incoming().userId == request.auth.uid &&
+        isValidAcademyReview(incoming(), reviewId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+
+      allow update: if isValidId(reviewId) && (
+        isAdmin() || (
+          isSignedIn() &&
+          resource.data.userId == request.auth.uid &&
+          incoming().userId == existing().userId &&
+          incoming().academyId == existing().academyId &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().updatedAt == request.time &&
+          isValidAcademyReview(incoming(), reviewId)
+        )
+      );
+
+      allow delete: if isValidId(reviewId) && (
+        isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid)
+      );
+    }
+  }
+}

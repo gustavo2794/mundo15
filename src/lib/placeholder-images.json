@@ -1,0 +1,88 @@
+{
+  "placeholderImages": [
+    {
+      "id": "login-bg",
+      "description": "A festive background for the login screen with blurred lights and decorations.",
+      "imageUrl": "https://images.unsplash.com/photo-1728566849567-c68e8530c254?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxxdWluY2VhbmVyYSUyMGRlY29yYXRpb25zfGVufDB8fHx8MTc1ODY3MjM4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "quinceanera decorations"
+    },
+    {
+      "id": "academy-logo-1",
+      "description": "Logo for Ritmo Latino Dance Academy.",
+      "imageUrl": "https://images.unsplash.com/photo-1615213253844-9a9d661d40d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkYW5jZSUyMHN0dWRpb3xlbnwwfHx8fDE3NTg2NzIzODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dance studio"
+    },
+    {
+      "id": "academy-logo-2",
+      "description": "Logo for Elegancia Choreography.",
+      "imageUrl": "https://images.unsplash.com/photo-1758529224471-1148947fe149?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxlbGVnYW50JTIwZGFuY2V8ZW58MHx8fHwxNzU4NjcyMzgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "elegant dance"
+    },
+    {
+      "id": "academy-logo-3",
+      "description": "Logo for Sueños de Vals.",
+      "imageUrl": "https://images.unsplash.com/photo-1748765212717-4c5f304be1c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8d2FsdHolMjBkYW5jZXxlbnwwfHx8fDE3NTg2NzIzODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "waltz dance"
+    },
+    {
+      "id": "academy-logo-4",
+      "description": "Logo for Ecos del Sur",
+      "imageUrl": "https://images.unsplash.com/photo-1508700929628-666d84347069?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmb2xrbG9yZSUyMGRhbmNlfGVufDB8fHx8MTc1ODc3OTU4OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "folklorico collage"
+    },
+    {
+      "id": "gallery-1-1",
+      "description": "Dancers performing a salsa routine.",
+      "imageUrl": "https://images.unsplash.com/photo-1530808773500-f697df4bf53d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzYWxzYSUyMGRhbmNpbmd8ZW58MHx8fHwxNzU4NjcyMzgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salsa dancing"
+    },
+    {
+      "id": "gallery-1-2",
+      "description": "A group of dancers in colorful costumes.",
+      "imageUrl": "https://images.unsplash.com/photo-1495837174058-628aafc7d610?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkYW5jZSUyMGdyb3VwfGVufDB8fHx8MTc1ODY3MjM4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dance group"
+    },
+    {
+      "id": "gallery-1-3",
+      "description": "A quinceañera dancing with her court.",
+      "imageUrl": "https://images.unsplash.com/photo-1605013187302-3067f28e8fdd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxxdWluY2VhbmVyYSUyMGRhbmNlfGVufDB8fHx8MTc1ODY3MjM4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "quinceanera dance"
+    },
+    {
+      "id": "gallery-2-1",
+      "description": "An elegant waltz performance.",
+      "imageUrl": "https://images.unsplash.com/photo-1511715282680-fbf93a50e721?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxiYWxscm9vbSUyMGRhbmNpbmd8ZW58MHx8fHwxNzU4NjcyMzgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ballroom dancing"
+    },
+    {
+      "id": "gallery-2-2",
+      "description": "A dance studio with mirrors.",
+      "imageUrl": "https://images.unsplash.com/photo-1603425013520-e0b30e6e37dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZGFuY2UlMjBzdHVkaW98ZW58MHx8fHwxNzU4NjcyMzgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dance studio"
+    },
+    {
+      "id": "gallery-2-3",
+      "description": "Close up of dancing shoes.",
+      "imageUrl": "https://images.unsplash.com/photo-1670607231621-c00fd76d2387?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxkYW5jaW5nJTIwc2hvZXN8ZW58MHx8fHwxNzU4NjcyMzgwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dancing shoes"
+    },
+    {
+      "id": "gallery-3-1",
+      "description": "Father and daughter dancing a waltz.",
+      "imageUrl": "https://images.unsplash.com/photo-1528256507509-cc4facea43f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYXRoZXIlMjBkYXVnaHRlcnxlbnwwfHx8fDE3NTg2NzIzODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "father daughter"
+    },
+    {
+      "id": "gallery-3-2",
+      "description": "Modern dance choreography.",
+      "imageUrl": "https://images.unsplash.com/photo-1547153760-18fc86324498?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBkYW5jZXxlbnwwfHx8fDE3NTg2NzIzODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "modern dance"
+    },
+    {
+      "id": "gallery-3-3",
+      "description": "A surprise dance performance at a party.",
+      "imageUrl": "https://images.unsplash.com/photo-1731596153373-7b13275e79cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzdXJwcmlzZSUyMGRhbmNlfGVufDB8fHx8MTc1ODY3MjM4MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "surprise dance"
+    }
+  ]
+}
